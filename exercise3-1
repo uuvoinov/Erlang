@@ -1,0 +1,21 @@
+-module('Exercise3-1').
+-author("uuvoinov").
+
+-export([sum/1,sum/2]).
+
+sum(N) when N<1 ->
+  "wrong value";
+sum(N) when not(is_integer(N))  ->
+  "wrong format";
+sum(N) when N>0 -> sum_acc1(N,0).
+
+sum_acc1(N,Sum) when N<1-> Sum;
+sum_acc1(N,Sum)-> sum_acc1(N-1,Sum+N).
+
+sum(N,M) when not(is_integer(N)) or not(is_integer(M)) ->
+  "wrong values";
+sum(N,M) when N=<M ->sum_acc2(N,M,0);
+sum(N,M) when N>M -> N/0.
+
+sum_acc2(N,M,Sum) when N>M->Sum;
+sum_acc2(N,M,Sum)->sum_acc2(N+1,M,Sum+N).
