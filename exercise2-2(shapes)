@@ -1,0 +1,15 @@
+-module(shapes).
+-author("uuvoinov").
+
+-export([area/1]).
+-import(math, [sqrt/1]).
+
+area({square, Side}) ->
+  Side * Side ;
+area({circle, Radius}) ->
+  math:pi() * Radius * Radius ;
+area({triangle, _A, _B, _C}) ->
+  S = (_A + _B + _C)/2,
+math:sqrt(S*(S-_A)*(S-_B)*(S-_C));
+area(_Other) ->
+{error, invalid_object}.
