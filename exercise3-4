@@ -1,0 +1,41 @@
+-module(db).
+-author("uuvoinov").
+
+-export([new/0,destroy/1,write/3,delete/2,read/2,match/2]).
+
+new() -> [].
+destroy(_) ->ok.
+
+write(Key, Element, Db) ->
+  [{Key,Element}|delete(Key,Db)].
+
+
+delete(Key, Db) -> del_Db(Db,[],Key).
+
+del_Db([],NewDb,_) -> reverse(NewDb,[]);
+del_Db([H|T],NewDb,Key) ->
+  case Key=:=element(1,H)of
+    true -> del_Db(T, NewDb,Key);
+    false -> del_Db(T,[H|NewDb],Key)
+  end.
+
+
+read(_,[])-> {error,instance};
+read(Key, [H|T]) ->
+  case Key=:=element(1,H) of
+    true-> {ok,element(2,H)};
+    false -> read(Key,T)
+  end.
+
+
+match(Element, Db) -> match_Elements(Element,Db,[]).
+
+match_Elements(_,[],Keys)->reverse(Keys,[]);
+match_Elements(Element,[H|T],Keys) ->
+  case Element=:=element(2,H) of
+    true -> match_Elements(Element,T,[element(1,H)|Keys]);
+    false -> match_Elements(Element,T,Keys)
+  end.
+
+reverse([], Acc) -> Acc;
+reverse([H | T], Acc) -> reverse(T, [H | Acc]).
