@@ -1,0 +1,30 @@
+-module('Exercise3-3').
+-author("uuvoinov").
+
+-export([print_num/1, print_odd/1]).
+
+print_num(N) when N=<0 ->
+  "wrong size";
+print_num(N) when not(is_integer(N))  ->
+  "wrong format";
+print_num(N) -> out_num(N,1).
+
+out_num(N,Count) when Count > N ->
+  ok;
+out_num(N,Count) when Count =< N ->
+  io:format("Number:~p~n",[Count]), out_num(N,Count+1).
+
+
+print_odd(N) when N=<0 ->
+  "wrong size";
+print_odd(N) when not(is_integer(N))  ->
+  "wrong format";
+print_odd(N) -> out_odd(N,1).
+
+out_odd(N,Count) when Count == N  ->
+  ok;
+out_odd(N,Count) when Count rem 2 == 0  ->
+  out_odd(N,Count+1);
+out_odd(N,Count) when Count rem 2 == 1  ->
+  io:format("Number:~p~n",[Count]),
+  out_odd(N,Count+1).
