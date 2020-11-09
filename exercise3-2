@@ -1,0 +1,20 @@
+-module('Exercise3-2').
+-author("uuvoinov").
+
+-export([create/1,reverse_create/1]).
+
+create(Size) when Size=<0 ->
+  "wrong size";
+create(Size) when not(is_integer(Size))  ->
+  "wrong format";
+create(Size) -> create_acc([Size]).
+create_acc([H|T]) when H=<1 ->[H|T];
+create_acc([H|T]) -> create_acc([H-1,H|T]).
+
+reverse_create(Size) when Size=<0 ->
+  "wrong size";
+reverse_create(Size) when not(is_integer(Size))  ->
+  "wrong format";
+reverse_create(Size) -> reverse(create(Size),[]).
+reverse([], Acc) -> Acc;
+reverse([H | T], Acc) -> reverse(T, [H | Acc]).
