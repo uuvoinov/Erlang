@@ -1,0 +1,51 @@
+-module('Exercise5-2').
+-author("uuvoinov").
+
+
+-export([start/0, stop/0, allocate/0, deallocate/1]).
+
+
+
+start() -> register(freq, spawn('Exercise5-2', init, [])).
+
+init() -> Freqs = {getFreqs(), []}, loop(Freqs).
+
+getFreqs() -> [10,11,12,13,14,15].
+
+stop() -> call(stop).
+
+allocate() -> call(allocate).
+
+deallocate(Freq) -> call({deallocate, Freq}).
+
+call(Message) -> freq ! {request, self(), Message},
+  receive {reply, Reply} -> Reply
+  end.
+
+loop(Freqs) ->
+  receive
+    {request, Process, allocate} -> {NewFreqs, Reply} = allocate(Freqs, Process),
+      reply(Process, Reply),
+      loop(NewFreqs);
+    {request, Process, {deallocate, Freq}} ->
+      {Reply, NewFreqs} = deallocate(Freqs, {Freq, Process}),
+      reply(Process, Reply),
+      loop(NewFreqs);
+    {request, Process, stop} ->
+      case element(1, Freqs) of
+        [] -> reply(Process, ok);
+        _ -> reply(Process, cannotStopUntilAreFreqs), loop(Freqs)
+      end
+  end.
+
+reply(Process, Reply) -> Process ! {reply, Reply}.
+
+allocate({[], Allocated}, _Process) -> {{[], Allocated}, {error, noFreq}};
+allocate({[Freq|Free], Allocated}, Process) -> {{Free, [{Freq, Process}|Allocated]}, {ok, Freq}}.
+
+deallocate({Free, Allocated}, Item) ->
+  case lists:member(Item, Allocated) of
+    true -> NewAllocated = lists:keydelete(Freq=element(1, Item), 1, Allocated),
+      {ok, {[Freq|Free], NewAllocated}};
+    false -> {notFoundFreq, {Free, Allocated}}
+  end.
