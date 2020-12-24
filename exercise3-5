@@ -1,0 +1,27 @@
+-module('Exercise3-5').
+-author("uuvoinov").
+
+-export([filter/2,reverse/2,concatenate/1, flatten/1]).
+
+filter(List, Num) ->reverse(filter_acc(List,Num,[]),[]).
+filter_acc([],_, Acc)-> Acc;
+filter_acc([H|T],Num, Acc)->
+  case H=<Num of
+    true -> filter_acc(T,Num,[H| Acc]);
+    false -> filter_acc(T,Num, Acc)
+  end.
+
+reverse([], Acc) -> Acc;
+reverse([H | T], Acc) -> reverse(T, [H | Acc]).
+
+concatenate(List)->concatenate(List,[]).
+concatenate([],L) -> L;
+concatenate([H|T],L) ->
+  concatenate( T, L ++ H).
+
+
+flatten(List) -> flatten(List,[]).
+flatten([],Acc)->Acc;
+flatten([H|T], Acc) ->
+  flatten (H, flatten(T, Acc));
+flatten(Element, Acc) -> [Element|Acc].
