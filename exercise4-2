@@ -1,0 +1,32 @@
+-module('Exercise4-2').
+-author("uuvoinov").
+
+-export([start/3, newProcess/4]).
+
+start(M, N, Message) -> newProcess(self(), M, N, Message),
+  ok.
+
+newProcess(Process, M, 0, Message) ->
+  sending(Process, M, Message),
+  receiving(M, Message),
+  Process ! {Process, ok};
+newProcess(Process, M, N, Message) ->
+  NewProcess = spawn(?MODULE, newProcess, [Process, M, N-1, Message]),
+  sending(NewProcess, M, Message),
+  receiving(M, Message),
+  receive {_, ok} -> io:format("Process:~p finished his work", [_])
+  end.
+
+sending(_, 0, _) -> sendingEnded;
+sending(Process, M, Message) ->
+  Process ! {self(), Process, Message},
+  io:format("Process:~p send message:~p to process:~p~n", [self(), Message, Process]),
+  sending(Process, M-1, Message).
+
+receiving(0, _) -> receivingEnded;
+receiving(M, Message) ->
+  receive
+    {From, _, Message} when M > 0 ->
+      io:format("Process:~p receive message:~p from process:~p~n", [_, Message, From]),
+      receiving(M-1, Message)
+  end.
