@@ -1,0 +1,17 @@
+-module('Exercise7-4').
+-author("uuvoinov").
+
+-export([p/1, s/1]).
+
+-record(circle, {radius}).
+-record(rectangle, {length, width}).
+-record(triangle, {a, b, c}).
+
+p(#circle{radius=Radius}) -> 2 * math:pi() * Radius;
+p(#rectangle{length=Length, width=Width}) -> 2 * (Length + Width);
+p(#triangle{a=A, b=B, c=C}) -> A + B + C.
+
+s(#circle{radius=Radius}) -> Radius * Radius * math:pi();
+s(#rectangle{length=Length,width=Width}) -> Length * Width;
+s(#triangle{a=A,b=B,c=C}) -> S = (A+B+C)/2,
+  math:sqrt(S*(S-A)*(S-B)*(S-C)).
