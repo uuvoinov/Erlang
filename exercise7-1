@@ -1,0 +1,13 @@
+-module('Exercise7-1').
+-author("uuvoinov").
+
+-export([birthday/1, joe/0, showPerson/1]).
+
+-record(person, {name,age=0,phoneNum,address}).
+
+birthday(#person{age=Age} = Person) -> Person#person{age=Age+1}.
+
+joe() -> #person{name="Joe", age=35, phoneNum="777-777", address="NY"}.
+
+showPerson(#person{age=Age,phoneNum=PhoneNum,name=Name,address=Address}) ->
+  io:format("Name: ~p  Age: ~p  Phone number: ~p Address: ~p~n", [Name,Age,PhoneNum,Address]).
