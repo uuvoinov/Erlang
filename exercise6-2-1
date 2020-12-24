@@ -1,0 +1,50 @@
+-module('Exercise6-2-1').
+-author("uuvoinov").
+
+-export([start/0, stop/0]).
+-export([wait/0, signal/0]).
+
+
+start() -> register(mutexLink, spawn('Exercise6-2-1', init, [])).
+
+stop() -> mutexLink ! stop.
+
+init() -> process_flag(trap_exit, true),
+  free().
+
+wait() -> mutexLink ! {wait, self()},
+  receive ok -> ok
+  end.
+
+signal() -> mutexLink ! {signal, self()},
+  ok.
+
+free() ->
+  receive
+    {wait, Process} ->
+      try
+        link(Process),
+        Process ! ok,
+        busy(Process)
+      catch
+        error:noproc -> free();
+        _ -> terminate()
+      end;
+    stop -> terminate()
+  end.
+
+busy(Process) ->
+  receive
+    {signal, Process} -> unlink(Process),
+      free();
+    {'Exit', Process, _Reason} ->
+      free()
+  end.
+
+terminate() ->
+  receive
+    {wait, Process} -> exit(Process, kill),
+      terminate()
+  after
+    0 -> ok
+  end.
