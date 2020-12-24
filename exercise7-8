@@ -1,0 +1,18 @@
+-module('Exercise7-8').
+-author("uuvoinov").
+
+-export([start/0]).
+
+-define(Sunday, {day, 1}).
+-define(Monday, {day, 2}).
+-define(Tuesday, {day, 3}).
+-define(Wednesday, {day, 4}).
+-define(Thursday, {day, 5}).
+-define(Friday, {day, 6}).
+-define(Saturday, {day, 7}).
+-define(Week, {?Sunday,?Monday,?Tuesday,?Wednesday,?Thursday,?Friday,?Saturday}).
+
+start() -> io:format("Number: ~p  Dat: ~p~n", [1,element(1,?Week)]), test(1).
+
+test(Int) when (Int+1)=:=8 ->ok;
+test(Int)-> io:format("Number: ~p  Dat: ~p~n", [Int+1,element(Int+1,?Week)]), test(Int+1).
