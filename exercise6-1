@@ -1,0 +1,21 @@
+-module('Exercise6-1').
+-author("uuvoinov").
+
+-export([start/0, print/1, stop/0, loop/0]).
+
+start() -> register(echo, spawn('Exercise6-1', loop, [])),
+  ok.
+
+loop() ->
+  receive
+    {print, Term, Process} -> link(Process),
+      io:format("~p~n", [Term]), loop();
+    stop -> true;
+    _ -> {error, unknownMessage}
+  end.
+
+print(Term) -> echo ! {print, Term, self()},
+  ok.
+
+stop() -> exit(self(), kill),
+  ok.
