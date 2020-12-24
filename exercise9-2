@@ -1,0 +1,14 @@
+-module('Exercise9-2').
+-author("uuvoinov").
+
+-export([divBy3/0, intSeq/1, intersection/2, symbolDiff/2]).
+
+divBy3() -> [El || El <- lists:seq(1, 10), El rem 3 == 0].
+
+intSeq(List) -> [El*El || El <- List, is_integer(El)].
+
+intersection(List1, List2) -> [El1 || El1 <- List1, El2 <- List2, El1 == El2].
+
+symbolDiff(List1, List2) ->
+  [El || El <- List1, not lists:member(El, List2)] ++
+  [El || El <- List2, not lists:member(El, List1)].
