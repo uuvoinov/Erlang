@@ -1,0 +1,12 @@
+-module('Exercise9-3').
+-author("uuvoinov").
+
+-export([zip/2, zipWith/3]).
+
+zip(_, []) -> [];
+zip([], _) -> [];
+zip([H1|T1], [H2|T2]) ->
+  [{H1, H2} | zip(T1, T2)].
+
+zipWith(Function, List1, List2) ->
+  [Function(El1,El2) || {El1,El2} <- zip(List1, List2)].
