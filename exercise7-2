@@ -1,0 +1,9 @@
+-module('Exercise7-2').
+-author("uuvoinov").
+
+-export([foobar/1]).
+
+-record(person, {name,age=0,phoneNum,address}).
+
+foobar(P) when P#person.name == "Joe" -> joe;
+foobar(_) -> notPersonJoeRecord.
