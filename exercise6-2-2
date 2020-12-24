@@ -1,0 +1,49 @@
+
+-module('Exercise6-2-2').
+-author("uuvoinov").
+
+-export([start/0, stop/0]).
+-export([wait/0, signal/0]).
+
+start() -> register(mutexMonitor, spawn('Exercise6-2-2', free, [])).
+
+stop() -> mutexMonitor ! stop.
+
+wait() -> mutexMonitor ! {wait, self()},
+  receive ok -> ok
+  end.
+
+signal() -> mutexMonitor ! {signal, self()},
+  ok.
+
+free() ->
+  receive
+    {wait, Process} ->
+      Ref = erlang:monitor(process, Process),
+      Process ! ok,
+      busy(Process, Ref);
+    stop ->
+      terminate()
+  end.
+
+busy(Process, Ref) ->
+  receive
+    {signal, Process} ->
+      erlang:demonitor(Ref, [flush]),
+      free();
+    {'DOWN', Ref, process, Process, _Reason} ->
+      erlang:demonitor(Ref, [flush]),
+      free()
+  end.
+
+terminate() ->
+  receive
+    {wait, Process} -> exit(Process, kill),
+      terminate()
+  after
+    0 -> ok
+  end.
+
+
+
+
