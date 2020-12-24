@@ -1,0 +1,19 @@
+-module('Exercise3-7').
+-author("uuvoinov").
+
+
+-export([new/0, destroy/1, write/3, delete/2, read/2, match/2]).
+
+
+new() -> [].
+
+destroy(_) -> ok.
+
+write(Key, Element, Db) -> [{Key, Element}|lists:keydelete(Key, 1, Db)].
+
+delete(Key, Db) -> lists:keydelete(Key, 1, Db).
+
+read(Key, Db) -> read(lists:keyfind(Key, 1, Db)).
+read({_, Element}) -> {ok, Element}.
+
+match(Element, Db) -> [Key || {Key, El} <- Db, El =:= Element].
